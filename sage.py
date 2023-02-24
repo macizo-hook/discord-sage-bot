@@ -1,6 +1,7 @@
 import os
 import discord
 import openai
+import logging
 
 openai.api_key = os.environ['OPENAI_API_KEY']
 
@@ -11,6 +12,10 @@ client = discord.Client(intents=intents)
 
 # Create a dictionary to store the context for each user; there are possibly better structures.
 context = {}
+
+logging.basicConfig(filename='sage.log', level=logging.ERROR,
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger = logging.getLogger(__name__)
 
 
 @client.event
@@ -48,7 +53,13 @@ async def on_message(message):
         else:
             await message.channel.send("I'm sorry, I don't know how to respond to that.")
 
+    except openai.Error as e:
+        logger.error("OpenAI API error: {}".format(str(e)))
+        await message.channel.send("Error: Something went wrong with the OpenAI API. Please try again later.")
+    except discord.DiscordException as e:
+        logger.error("Discord error: {}".format(str(e)))
     except Exception as e:
-        print("Error:", e)
+        logger.error("Unexpected error: {}".format(str(e)))
+        await message.channel.send("Error: Something unexpected happened. Please contact Hook (https://github.com/macizo-hook) or open an Issue in https://github.com/macizo-hook/discord-sage-bot.")
 
 client.run(os.environ['DISCORD_BOT_TOKEN'])
