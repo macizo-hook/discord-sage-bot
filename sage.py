@@ -2,8 +2,11 @@ import os
 import discord
 import openai
 import logging
+import spacy
+
 
 openai.api_key = os.environ['OPENAI_API_KEY']
+nlp = spacy.load("en_core_web_sm")
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -34,6 +37,12 @@ async def on_message(message):
         prompt += "\n\nContext: {}".format(user_context)
 
     try:
+        # Apply NLP techniques to the prompt
+        doc = nlp(prompt)
+
+        # Use named entity recognition to extract entities
+        entities = [ent.text for ent in doc.ents]
+
         # Send prompt to OpenAI API
         response = openai.Completion.create(
             engine="text-davinci-002",
