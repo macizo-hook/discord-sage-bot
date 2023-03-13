@@ -29,6 +29,9 @@ async def on_message(message):
     # Get the context for the current user
     user_context = context.get(message.author.id, {})
 
+    # Define prompt
+    prompt = ''
+
     if message.content.startswith("!gpt"):
         prompt = 'Response to: "{}"'.format(message.content[5:]).strip()
 
