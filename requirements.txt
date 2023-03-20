@@ -1,0 +1,4 @@
+discord.py==2.2.2
+openai==0.26.5
+spacy==3.5.0
+
