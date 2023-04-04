@@ -15,7 +15,9 @@ RUN python -m spacy download en_core_web_sm
 # Make the script file executable
 RUN chmod +x sage.py
 
+#Read tokens for OPENAI and discord
 ENV OPENAI_API_KEY=$OPENAI_API_KEY
 ENV DISCORD_BOT_TOKEN=$DISCORD_BOT_TOKEN
+
 # Define the command to run the script file when the container starts
 CMD ["python", "./sage.py"]
